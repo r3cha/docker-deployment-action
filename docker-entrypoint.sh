@@ -5,6 +5,7 @@ execute_ssh(){
   echo "Execute Over SSH: $@"
   ssh -q -t -i "$HOME/.ssh/id_rsa" \
       -o UserKnownHostsFile=/dev/null \
+      -p $INPUT_REMOTE_DOCKER_PORT \
       -o StrictHostKeyChecking=no "$INPUT_REMOTE_DOCKER_HOST" "$@"
 }
 
@@ -89,6 +90,7 @@ if ! [ -z "$INPUT_COPY_STACK_FILE" ] && [ $INPUT_COPY_STACK_FILE = 'true' ] ; th
   scp -i "$HOME/.ssh/id_rsa" \
       -o UserKnownHostsFile=/dev/null \
       -o StrictHostKeyChecking=no \
+      -P $INPUT_REMOTE_DOCKER_PORT \
       $INPUT_STACK_FILE_NAME "$INPUT_REMOTE_DOCKER_HOST:$INPUT_DEPLOY_PATH/stacks/$FILE_NAME"
 
   execute_ssh "ln -nfs $INPUT_DEPLOY_PATH/stacks/$FILE_NAME $INPUT_DEPLOY_PATH/$INPUT_STACK_FILE_NAME"
